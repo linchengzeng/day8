@@ -4,13 +4,13 @@
 import socket,os
 
 s_server = socket.socket()  # 声明socket类型（地址族、协议类型等 ），同时生成socket连接对象
-h = '127.0.0.1'  #服务器端服务所绑定使用的IP
-p = 8823
-s_server.bind((h, p))  # 绑定要监听的端口
+Host_ip = '127.0.0.1'  #服务器端服务所绑定使用的IP
+Ip_port = 8823
+s_server.bind((Host_ip, Ip_port))  # 绑定要监听的端口
 
 # while True:
 s_server.listen(5)  # 最多挂起5个连接   此部分在异步的情况下才能试出效果
-print('已经开始监听端口，现在正在等电话打进来……')
+base_path = os.path.dirname(__file__)  # 文件所在目录
 ##########   例一  ##############
 # while True:
 #     # 等电话打进来,
@@ -52,7 +52,7 @@ class Ftp_server_start(object):
         self.start()
 
     def start(self):
-        print('this is server start')
+        print('this is server start line 55')
         ftp_server_menu = {
             'get_file': self.get_file,
         }
@@ -111,17 +111,21 @@ class Ftp_server_start(object):
         else:
             conn.send('file_error'.encode('utf-8'))
             return None
+
 while True:
-    base_path = os.path.dirname(__file__)  # 文件所在目录
+    print('已经开始监听端口，现在正在等电话打进来……')
+
     conn, addr = s_server.accept()
     while True:
         print('接收到客户端请求，正在等待传输数据……')
         c_data = conn.recv(204800).decode('utf-8')
         print('c_data',c_data)
-        Ftp_server_start()
-        if c_data == 'exit':
+        if c_data == 'exits':
             conn.close()
+            print('客户断开连接！正在等待新的连接……')
             break
+        Ftp_server_start()
+
 
 
 

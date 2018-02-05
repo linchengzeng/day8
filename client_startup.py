@@ -24,7 +24,6 @@ f_client_conn.connect((h, p))
 # f_client.close()  # 关闭连接
 
 
-
 ##########   例二  传输命令  ##############
 # while True:
 #     user_input_fle = input('请输入您要上传的文件路径(如E:\\ABC\\D.TXT)>>:')
@@ -49,7 +48,7 @@ print('client user home:',user_home)
 # print('测试FTP传输文件1')
 class Ftp_Client_Start(object):
     def __init__(self):
-        # print('this is client_startup.py')
+        # print('this is client_startup.py' in line 51)
         self.start()
 
     def start(self):
@@ -58,21 +57,22 @@ class Ftp_Client_Start(object):
             put：上传文件
             get：下载文件
             cd：目录切换
+            exits：退出程序
         '''
         while True:
             print(ftp_menu)
             user_input = input('请输入需要的操作：')
-            # print(self)
             self.user_main_page(user_input)
 
+
     def user_main_page(self,user_input):
-        # print('this is user_main_page')
-        # print(self)
+        # print('this is user_main_page line 70')
         ftp_menu = {
             'show':self.show,
             'put':self.put,
             'get':self.get_file,
-            'cd':self.cd
+            'cd':self.cd,
+            'exits':self.exits
         }
         if user_input in ftp_menu:
             print('line 69')
@@ -122,23 +122,20 @@ class Ftp_Client_Start(object):
                     f_size += len(data)
                     print('已接收：', f_size)
             else:print('文件接收完毕')
-            # else:   # 接收剩余的文件数据
-            #     data = f_client_conn.recv(load_file_size - f_size)
-            #     print('剩余文件大小%s'%len(data))
-            #     with open(user_home+'/'+f_name, 'ab+') as f:
-            #         f.write(data)
-            #         f.flush()
-            #         f_size += len(data)
-            #         print('已接收2：', f_size)
-            #         print('文件接收完毕')
         else:
             print('文件传输异常，请联系服务器管理人员！')
             f_client_conn.send(b'send_break')
             return None
 
+    # 目录切换
     def cd(self):
-        # pass
+        # user_home
         print('changed folder')
+
+    def exits(self):
+        f_client_conn.send(b'exits')
+        print('欢迎您再次使用Aling_FTP，再见！')
+        exit()
 
 Ftp_Client_Start()
 
