@@ -111,16 +111,17 @@ class Ftp_server_start(object):
         else:
             conn.send('file_error'.encode('utf-8'))
             return None
-
-base_path = os.path.dirname(__file__)  # 文件所在目录
-conn, addr = s_server.accept()
 while True:
-    print('接收到客户端请求，正在等待传输数据……')
-    c_data = conn.recv(204800).decode('utf-8')
-    print('c_data',c_data)
-    Ftp_server_start()
-    if c_data == 'exit':
-        conn.close()
+    base_path = os.path.dirname(__file__)  # 文件所在目录
+    conn, addr = s_server.accept()
+    while True:
+        print('接收到客户端请求，正在等待传输数据……')
+        c_data = conn.recv(204800).decode('utf-8')
+        print('c_data',c_data)
+        Ftp_server_start()
+        if c_data == 'exit':
+            conn.close()
+            break
 
 
 
