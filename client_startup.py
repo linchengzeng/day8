@@ -10,31 +10,6 @@ p = 8823
 f_client_conn.connect((h, p))
 
 
-##############  例一  中文传输  ###############
-# while True:
-#     f = input('请输入您要上传的文件路径(如E:\\ABC\\D.TXT)>>:').encode('utf-8')
-#     if f == 'exit':
-#         f_client.close()  # 关闭连接
-#         exit()
-#     if len(f) == 0:continue   # 不能发空数据，否则服务器会认为发送数据未结束
-#     f_client.send(f)  # 发信息 #python3要求发送的必须为byte类型的数据
-#     data = f_client.recv(1024)  # 1024字节
-#     print("client_recv:",data.decode())  # bytes类型转回中文要decode
-#
-# f_client.close()  # 关闭连接
-
-
-##########   例二  传输命令  ##############
-# while True:
-#     user_input_fle = input('请输入您要上传的文件路径(如E:\\ABC\\D.TXT)>>:')
-#     if user_input_fle == 'exit': f_client.close(), exit()
-#     if len(user_input_fle) == 0: continue
-#     upload_file = open(user_input_fle, 'rb')
-#     f_client.sendall(upload_file)
-#     f_s_recv = f_client.recv(1024)
-#     print(f_s_recv.decode())
-# f_client.close()
-
 
 #######      例三   文件传输  ##############
 base_path = os.path.dirname(__file__)  # 文件所在目录
@@ -68,7 +43,7 @@ class Ftp_Client_Start(object):
     def user_main_page(self,user_input):
         # print('this is user_main_page line 70')
         ftp_menu = {
-            'show':self.show,
+            'show':self.show_files,
             'put':self.put,
             'get':self.get_file,
             'cd':self.cd,
@@ -83,9 +58,15 @@ class Ftp_Client_Start(object):
             # return Ftp_Client_Start.start(self)
             return None
 
-    def show(self):
-        #pass
-        print('show list')
+    def show_files(self):
+        print('show def')
+        f_client_conn.send(b'show_files')
+        file_list = f_client_conn.recv(204800)
+        print(file_list)
+        # for line in file_list:
+        #     print(line)
+
+
 
     def put(self):
         #pass
@@ -138,6 +119,4 @@ class Ftp_Client_Start(object):
         exit()
 
 Ftp_Client_Start()
-
-
 f_client_conn.close()

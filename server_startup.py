@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 #  Author:aling
 # 服务器端
-import socket,os
+import socket,os,subprocess
 
 s_server = socket.socket()  # 声明socket类型（地址族、协议类型等 ），同时生成socket连接对象
 Host_ip = '127.0.0.1'  #服务器端服务所绑定使用的IP
@@ -11,36 +11,6 @@ s_server.bind((Host_ip, Ip_port))  # 绑定要监听的端口
 # while True:
 s_server.listen(5)  # 最多挂起5个连接   此部分在异步的情况下才能试出效果
 base_path = os.path.dirname(__file__)  # 文件所在目录
-##########   例一  ##############
-# while True:
-#     # 等电话打进来,
-#     # 若有来电，则标记该来电
-#     # 1、conn链接的标记位（就是客户端连接过来而在服务器端为其生成的一个连接实例）
-#     # 2、addr对方的地址
-#     print('接收到来电，正在接通中……')
-#     conn, addr = s_server.accept()
-#
-#     while True:
-#         c_data = conn.recv(1024)  # 收信息
-#         if not c_data:
-#             print('client has lost……')
-#             break   # 若客户端断开，则跳出循环
-#         conn.send(c_data.upper())  # 发信息(将接收到的数据全部变成大写)
-#         print('sever_resend:',c_data)
-# s_server.close()
-
-
-##########   例二  ##############
-# c_conn, c_addr = s_server.accept()
-# print('接收到客户端请求，正在等待传输数据……')
-# while True:
-#
-#     c_data = c_conn.recv(1024)
-#     if not c_data: break
-#     c_file = open(time())
-#     c_data = c_file.read()
-#
-# s_server.close()
 
 
 #######      例三     ##############
@@ -55,13 +25,15 @@ class Ftp_server_start(object):
         print('this is server start line 55')
         ftp_server_menu = {
             'get_file': self.get_file,
+            'show_files':self.show_files
         }
         # def __init__(self):
         #     Ftp_server_start
-        if c_data== 'get_file':
-            print('客户端发过来的请求为：get_file')
-            ftp_server_menu[c_data]()
+        # if c_data== 'get_file':
+        #     print('客户端发过来的请求为：get_file')
+        ftp_server_menu[c_data]()
 
+    # 文件下载
     def get_file(self):
         print('this is ftp server line 72')
         f_name = conn.recv(204800)
@@ -112,6 +84,15 @@ class Ftp_server_start(object):
             conn.send('file_error'.encode('utf-8'))
             return None
 
+    # 文件列表
+    def show_files(self):
+        print('this is show files')
+        result = subprocess.Popen('dir',shell=True,stderr=subprocess.PIPE,stdin=subprocess.PIPE,stdout=subprocess.PIPE,universal_newlines=True)
+        for line in result.stdout.readlines():
+            print(line)
+            conn.send(line.encode('utf-8'))
+
+
 while True:
     print('已经开始监听端口，现在正在等电话打进来……')
 
@@ -119,14 +100,11 @@ while True:
     while True:
         print('接收到客户端请求，正在等待传输数据……')
         c_data = conn.recv(204800).decode('utf-8')
-        print('c_data',c_data)
+        print('c_data:',c_data)
         if c_data == 'exits':
             conn.close()
             print('客户断开连接！正在等待新的连接……')
             break
         Ftp_server_start()
-
-
-
 
 s_server.close()

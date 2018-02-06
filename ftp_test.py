@@ -30,7 +30,7 @@
 #     print('文件发送完毕！')
 #     conn.send(b'send_session')
 # ###############################################################
-# f_size = 0  #已接收文件大小
+# f_size = 0  # 已接收文件大小
 #     while True:
 #         data = f_client_conn.recv(204800)
 #         with open(user_home+'/'+f_name, 'ab+') as f:
@@ -40,12 +40,14 @@
 #         if not len(data): break
 #     print('文件接收完毕')
 # print("##################################################################")
-import os,subprocess,sys,platform
-result = os.popen('ls').readlines()
-result = os.system('dir')
-result = sys.getdefaultencoding()
-result = subprocess.call('dir',shell=True)#  shell在windows中必须添加
-print(result)
+# import os,subprocess,sys,platform
+# sys.setdefaultencoding('utf-8')
+# result = os.popen('ls').readlines()
+# result = os.system('dir')
+# result = sys.getdefaultencoding()
+# result = subprocess.call('dir',shell=True)#  shell在windows中必须添加
+# print(result)
+
 
 '''
     python中，platform模块给我们提供了很多方法去获取操作系统的信息
@@ -69,6 +71,16 @@ print(result)
         platform.python_version()
         platform.python_version_tuple()
 '''
+# output = line.decode('cp936').encode('utf-8')
+# print "%s\n" % output
+# result = platform.platform()
+# if result.startswith('Windows'):
+#     print('this is windows system')
+#     print(subprocess.call('dir',shell=True))
+# else:
+#     print('this is other system')
+#     print(subprocess.call('ls'))
+
 # result2 = platform.platform()
 # print(result2)
 # a = [11, 22, 33, 44, 55, 66, 77, 88, 99, 90]
@@ -78,3 +90,44 @@ print(result)
 # # print(dict1)
 # for key in dict1:
 #     print(key,':',dict1[key])
+
+# begin = 101
+# print(str(begin))
+
+#
+# #
+# import subprocess
+# import sys
+# cmd = "cmd.exe"
+# begin = 101
+# end = 110
+# while begin < end:
+#     ##blow for windows shell chinese show##
+#     #reload(sys)
+#     #sys.setdefaultencoding('utf-8')
+#     print("excution result start :\n")
+#     child = subprocess.Popen(cmd, shell=True, stdout=subprocess.PIPE, stdin=subprocess.PIPE, stderr=subprocess.PIPE)
+#     print("ping -n 1 -w 100 127.0.0." + str(begin) + "\n")
+#     child.stdin.write("ping -n 1 -w 100 127.0.0." + str(begin) + "\n")
+#     child.stdin.close()
+#     child.wait()
+#     print("excution result end:\n")
+#     begin += 1
+#     #print child.stdout.readlines()
+#     for line in child.stdout.readlines():
+#         ##blow for pycharm and cygwin show chinese#
+#         output = line.encode('utf-8')
+#         print("%s\n" % output)
+
+import subprocess
+result = subprocess.Popen('dir',shell=True,stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+# print(result)
+for line in result.stdout.readlines():
+    print(type(line))
+    print(line)
+    if 'DIR' in line:
+        print('文件夹')
+    else:
+        print('文件')
+    # output = line.encode('utf-8')
+    # print(output)
