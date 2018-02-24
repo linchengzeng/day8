@@ -25,7 +25,8 @@ class Ftp_server_start(object):
         print('this is server start line 55')
         ftp_server_menu = {
             'get_file': self.get_file,
-            'show_files':self.show_files
+            'show_files':self.show_files,
+            'put_file':self.put_file
         }
         # def __init__(self):
         #     Ftp_server_start
@@ -44,7 +45,7 @@ class Ftp_server_start(object):
             f_size = os.path.getsize(file_path)  # 文件大小
             print('被请求文件大小',f_size)
             conn.send(str(f_size).encode('utf-8'))  # 发送file_exist 表示文件存在并开始传送文件
-            send_break = conn.recv(204800).decode('utf-8')
+            send_break = conn.recv(204800).decode('utf-8') # 接收到send_break表示客户端文件存在
             print('send_break:',send_break)
             if send_break == 'send_break':
                 print('客户端出错')
@@ -91,6 +92,14 @@ class Ftp_server_start(object):
         for line in result.stdout.readlines():
             print(line)
             conn.send(line.encode('utf-8'))
+
+    def put_file(self):
+        print('this is put files line 97')
+        put_file_name = conn.recv(204800).decode('utf-8')
+        put_file_size = conn.recv(204800).decode('utf-8')
+        print('客户端请求上传文件名称：',put_file_name)
+        print('客户端请求上传文件大小：',put_file_size)
+
 
 
 while True:
