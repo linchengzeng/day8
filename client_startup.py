@@ -79,11 +79,11 @@ class Ftp_Client_Start(object):
             f_client_conn.send(put_file_name.encode('utf-8'))
             f_size = os.path.getsize(put_file_name)  # 文件大小
             print('被请求上传文件的大小', f_size)
-            f_client_conn.send(str(f_size).encode('utf-8'))  # 发送file_exist 表示文件存在并开始传送文件
-            put_break = f_client_conn.recv(204800).decode('utf-8') # 接收到send_break表示客户端文件存在
+            f_client_conn.send(str(f_size).encode('utf-8'))  # 发送文件大小
+            put_break = f_client_conn.recv(204800).decode('utf-8') # 接收到put_break表示服务器文件存在
             print('put_break:', put_break)
             if put_break == 'put_break':
-                print('客户端出错')
+                print('服务器端出错')
                 return None
             put_size = 0  # 已发送文件大小
             # conn.send('abcdefg'.encode('utf-8'))
@@ -117,7 +117,8 @@ class Ftp_Client_Start(object):
                     # conn.send(b'send_session')
                     # return self.start()
         else:
-            f_client_conn.send('file_error'.encode('utf-8'))
+            print('您要上传的文件不存在，请查询后再操作！')
+            f_client_conn.send('client_file_error'.encode('utf-8'))
             return None
 
     ######  从服务器上下载文件

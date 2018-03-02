@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 #  Author:aling
 # 服务器端
-import socket,os,subprocess
+import socket,os,subprocess,re
 
 s_server = socket.socket()  # 声明socket类型（地址族、协议类型等 ），同时生成socket连接对象
 Host_ip = '127.0.0.1'  #服务器端服务所绑定使用的IP
@@ -11,7 +11,10 @@ s_server.bind((Host_ip, Ip_port))  # 绑定要监听的端口
 # while True:
 s_server.listen(5)  # 最多挂起5个连接   此部分在异步的情况下才能试出效果
 base_path = os.path.dirname(__file__)  # 文件所在目录
-
+user_data = {
+    'userid':'admin',
+    'userpwd':'admin',
+}
 
 #######      例三     ##############
 
@@ -94,11 +97,32 @@ class Ftp_server_start(object):
             conn.send(line.encode('utf-8'))
 
     def put_file(self):
-        print('this is put files line 97')
+        print('this is put files line 100')
         put_file_name = conn.recv(204800).decode('utf-8')
+        if put_file_name == 'client_file_error':
+            return None
         put_file_size = conn.recv(204800).decode('utf-8')
         print('客户端请求上传文件名称：',put_file_name)
         print('客户端请求上传文件大小：',put_file_size)
+        # 开始判断服务器是否存在同名文件
+        user_home = base_path + '/server_files/' + user_data['userid']  # 用户根目录
+        if os.path.exists(user_home):
+            print('start put file line 110')
+            f_size = 0  # 上传文件的大小
+            while put_file_size - f_size > 0:  # 大于小表示文件未传输完毕
+                data = conn.recv(204800)  # 服务传输过来的文件块数据
+                with open(user_home + '/' + put_file_name, 'ab+') as f:
+                    f.write(data)
+                    f.flush()
+                    f_size += len(data)
+                    print('已接收：', f_size)
+            else:
+                print('文件接收完毕')
+        else:
+            print('文件传输异常，请检查后再传输!')
+            conn.send('put_break'.encode('utf-8'))
+
+
 
 
 
