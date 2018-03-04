@@ -29,7 +29,7 @@ class Ftp_server_start(object):
         ftp_server_menu = {
             'get_file': self.get_file,
             'show_files':self.show_files,
-            'put_file':self.put_file
+            'put_file':self.put_files
         }
         # def __init__(self):
         #     Ftp_server_start
@@ -96,31 +96,34 @@ class Ftp_server_start(object):
             print(line)
             conn.send(line.encode('utf-8'))
 
-    def put_file(self):
+    def put_files(self):
         print('this is put files line 100')
-        put_file_name = conn.recv(204800).decode('utf-8')
-        if put_file_name == 'client_file_error':
+        put_file = conn.recv(204800).decode('utf-8')
+        if put_file == 'client_file_error':
+            print('客户端出错！')
             return None
         put_file_size = conn.recv(204800).decode('utf-8')
-        print('客户端请求上传文件名称：',put_file_name)
+        file_name = re.split('\\\\', put_file)[-1]
+        print('客户端请求上传文件名称：', re.split('\\\\', file_name)[-1])
         print('客户端请求上传文件大小：',put_file_size)
         # 开始判断服务器是否存在同名文件
         user_home = base_path + '/server_files/' + user_data['userid']  # 用户根目录
-        if os.path.exists(user_home):
+        if os.path.exists(user_home+'/'+file_name):
+            print('服务端出错，请检查后再传输!')
+            conn.send('put_break'.encode('utf-8'))
+        else:
+            conn.send('ckeck_success'.encode('utf-8'))
             print('start put file line 110')
-            f_size = 0  # 上传文件的大小
-            while put_file_size - f_size > 0:  # 大于小表示文件未传输完毕
+            f_size = 0  # 已上传文件的大小
+            while int(put_file_size) - f_size > 0:  # 大于小表示文件未传输完毕
                 data = conn.recv(204800)  # 服务传输过来的文件块数据
-                with open(user_home + '/' + put_file_name, 'ab+') as f:
+                with open(user_home + '/' + file_name, 'ab+') as f:
                     f.write(data)
                     f.flush()
                     f_size += len(data)
                     print('已接收：', f_size)
             else:
                 print('文件接收完毕')
-        else:
-            print('文件传输异常，请检查后再传输!')
-            conn.send('put_break'.encode('utf-8'))
 
 
 

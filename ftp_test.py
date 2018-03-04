@@ -119,15 +119,22 @@
 #         output = line.encode('utf-8')
 #         print("%s\n" % output)
 
-import subprocess
-result = subprocess.Popen('dir',shell=True,stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
-# print(result)
-for line in result.stdout.readlines():
-    print(type(line))
-    print(line)
-    if 'DIR' in line:
-        print('文件夹')
-    else:
-        print('文件')
-    # output = line.encode('utf-8')
-    # print(output)
+# import subprocess
+# result = subprocess.Popen('dir',shell=True,stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE, universal_newlines=True)
+# # print(result)
+# for line in result.stdout.readlines():
+#     print(type(line))
+#     print(line)
+#     if 'DIR' in line:
+#         print('文件夹')
+#     else:
+#         print('文件')
+#     # output = line.encode('utf-8')
+#     # print(output)
+
+import os
+print(os.path.getsize())
+if os.path.exists('client_startup.py'):
+    print('true')
+else:
+    print('false')

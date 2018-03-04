@@ -98,7 +98,7 @@ class Ftp_Client_Start(object):
                     else:
                         contest = f.read(f_size - put_size)
                     # print('将要发送的内容大小：', len(contest))
-                        f_client_conn.send(contest)  # 发送本次读取到的信息
+                    f_client_conn.send(contest)  # 发送本次读取到的信息
                     put_size += len(contest)
                     f.seek(put_size)  # 将光标句柄移至已发送的位置（即从光标开始往后都是未发送的内容)
                     # print('光标句柄所在位置：', f.tell())
