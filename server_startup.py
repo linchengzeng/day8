@@ -91,10 +91,15 @@ class Ftp_server_start(object):
     # 文件列表
     def show_files(self):
         print('this is show files')
-        result = subprocess.Popen('dir',shell=True,stderr=subprocess.PIPE,stdin=subprocess.PIPE,stdout=subprocess.PIPE,universal_newlines=True)
+        result = subprocess.Popen('dir',shell=True,stderr=subprocess.PIPE,stdin=subprocess.PIPE,
+                                  stdout=subprocess.PIPE,universal_newlines=True)
         for line in result.stdout.readlines():
-            print(line)
+            if 'DIR' in line:
+                print(line,'是文件夹',len(line))
+
+            else:print(line,'是文件',len(line))
             conn.send(line.encode('utf-8'))
+
 
     def put_files(self):
         print('this is put files line 100')

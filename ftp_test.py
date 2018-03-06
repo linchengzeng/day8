@@ -133,8 +133,4 @@
 #     # print(output)
 
 import os
-print(os.path.getsize())
-if os.path.exists('client_startup.py'):
-    print('true')
-else:
-    print('false')
+os.listdir()
