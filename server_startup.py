@@ -10,11 +10,6 @@ s_server.bind((Host_ip, Ip_port))  # 绑定要监听的端口
 
 # while True:
 s_server.listen(5)  # 最多挂起5个连接   此部分在异步的情况下才能试出效果
-base_path = os.path.dirname(__file__)  # 文件所在目录
-user_data = {
-    'userid':'admin',
-    'userpwd':'admin',
-}
 
 #######      例三     ##############
 
@@ -91,15 +86,8 @@ class Ftp_server_start(object):
     # 文件列表
     def show_files(self):
         print('this is show files')
-        result = subprocess.Popen('dir',shell=True,stderr=subprocess.PIPE,stdin=subprocess.PIPE,
-                                  stdout=subprocess.PIPE,universal_newlines=True)
-        for line in result.stdout.readlines():
-            if 'DIR' in line:
-                print(line,'是文件夹',len(line))
-
-            else:print(line,'是文件',len(line))
-            conn.send(line.encode('utf-8'))
-
+        result = os.listdir(user_in_path)
+        conn.send(result.encode('utf-8'))
 
     def put_files(self):
         print('this is put files line 100')
@@ -112,8 +100,8 @@ class Ftp_server_start(object):
         print('客户端请求上传文件名称：', re.split('\\\\', file_name)[-1])
         print('客户端请求上传文件大小：',put_file_size)
         # 开始判断服务器是否存在同名文件
-        user_home = base_path + '/server_files/' + user_data['userid']  # 用户根目录
-        if os.path.exists(user_home+'/'+file_name):
+
+        if os.path.exists(user_in_path+'/'+file_name):
             print('服务端出错，请检查后再传输!')
             conn.send('put_break'.encode('utf-8'))
         else:
@@ -122,7 +110,7 @@ class Ftp_server_start(object):
             f_size = 0  # 已上传文件的大小
             while int(put_file_size) - f_size > 0:  # 大于小表示文件未传输完毕
                 data = conn.recv(204800)  # 服务传输过来的文件块数据
-                with open(user_home + '/' + file_name, 'ab+') as f:
+                with open(user_in_path + '/' + file_name, 'ab+') as f:
                     f.write(data)
                     f.flush()
                     f_size += len(data)
@@ -131,13 +119,24 @@ class Ftp_server_start(object):
                 print('文件接收完毕')
 
 
-
-
-
 while True:
     print('已经开始监听端口，现在正在等电话打进来……')
 
-    conn, addr = s_server.accept()
+    conn, addr= s_server.accept()   # 标记客户端连接conn,标记客户端地址addr
+    # 开始验证
+    # user_name = conn.recv(204800)
+    # pass_word = conn.recv(204800)
+    # if user_name == user_data['userid'] and pass_word == user_data['userpwd']:
+    #     # 通过验证
+    #     pass
+    base_path = os.path.dirname(__file__)  # 文件所在目录
+    user_data = {
+        'userid': 'admin',
+        'userpwd': 'admin',
+    }
+
+    user_home = base_path + '/server_files/' + user_data['userid']  # 用户根目录
+    user_in_path = user_home
     while True:
         print('接收到客户端请求，正在等待传输数据……')
         c_data = conn.recv(204800).decode('utf-8')

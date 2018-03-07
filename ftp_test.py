@@ -133,4 +133,12 @@
 #     # print(output)
 
 import os
-os.listdir()
+file_path = os.path.dirname(__file__)
+result = os.listdir(file_path)
+for line in result:
+    if line == '.git':continue
+    elif line == '.idea':continue
+    elif os.path.isdir(line):
+        print(line,'is dir')
+    elif os.path.isfile(line):
+        print(line,'is file')

@@ -62,9 +62,13 @@ class Ftp_Client_Start(object):
         print('show def')
         f_client_conn.send(b'show_files')
         file_list = f_client_conn.recv(204800)
-        print(file_list)
-        # for line in file_list:
-        #     print(line)
+        for element in file_list:
+            if os.path.isfile(element):
+                print('文件:',element)
+            elif os.path.isdir(element):
+                print('目录:',element)
+            elif element == '.git':continue
+            elif element == '.idea':continue
 
 
 
