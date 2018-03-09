@@ -31,8 +31,10 @@ class Ftp_Client_Start(object):
             show：显示当前文件夹下的所有文件及文件详细信息
             put：上传文件
             get：下载文件
-            cd：目录切换
+            cd：进入子文件夹
+            top:返回上一层文件夹
             exits：退出程序
+            
         '''
         while True:
             print(ftp_menu)
@@ -50,7 +52,7 @@ class Ftp_Client_Start(object):
             'exits':self.exits
         }
         if user_input in ftp_menu:
-            print('line 69')
+            # print('line 69')
             ftp_menu[user_input]()
             # self.get_file()
         else:
@@ -61,16 +63,12 @@ class Ftp_Client_Start(object):
     def show_files(self):
         print('show def')
         f_client_conn.send(b'show_files')
-        file_list = f_client_conn.recv(204800)
-        for element in file_list:
-            if os.path.isfile(element):
-                print('文件:',element)
-            elif os.path.isdir(element):
-                print('目录:',element)
-            elif element == '.git':continue
-            elif element == '.idea':continue
-
-
+        result = f_client_conn.recv(204800)
+        # print(result)
+        file_dict = dict(eval(result.decode('utf-8')))
+        # print(file_dict)
+        for element_key in file_dict:
+            print(file_dict[element_key],':',element_key)
 
     def put(self):
         #pass

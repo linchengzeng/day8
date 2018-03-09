@@ -86,8 +86,20 @@ class Ftp_server_start(object):
     # 文件列表
     def show_files(self):
         print('this is show files')
-        result = os.listdir(user_in_path)
-        conn.send(result.encode('utf-8'))
+        file_list = os.listdir(user_in_path)
+        print(file_list)
+        file_dict = {}
+        for element in file_list:
+            if os.path.isfile(user_in_path +'/'+element):
+                print('文件:',element)
+                file_dict[element] = '文件'
+            elif os.path.isdir(user_in_path +'/'+element):
+                print('目录:',element)
+                file_dict[element] = '文件夹'
+            elif element == '.git':continue
+            elif element == '.idea':continue
+        print(file_dict)
+        conn.send(str(file_dict).encode('utf-8'))
 
     def put_files(self):
         print('this is put files line 100')
@@ -117,7 +129,6 @@ class Ftp_server_start(object):
                     print('已接收：', f_size)
             else:
                 print('文件接收完毕')
-
 
 while True:
     print('已经开始监听端口，现在正在等电话打进来……')

@@ -132,13 +132,20 @@
 #     # output = line.encode('utf-8')
 #     # print(output)
 
-import os
-file_path = os.path.dirname(__file__)
-result = os.listdir(file_path)
-for line in result:
-    if line == '.git':continue
-    elif line == '.idea':continue
-    elif os.path.isdir(line):
-        print(line,'is dir')
-    elif os.path.isfile(line):
-        print(line,'is file')
+import os,json
+# file_path = os.path.dirname(__file__)
+# result = os.listdir(file_path)
+# print(result)
+# print(str(result))
+# print('************')
+# result_b = list(eval(str(result)))
+# print(result_b)
+# print(type(result_b))
+print(os.path)
+# for line in result:
+#     if line == '.git':continue
+#     elif line == '.idea':continue
+#     elif os.path.isdir(line):
+#         print(line,'is dir')
+#     elif os.path.isfile(line):
+#         print(line,'is file')
