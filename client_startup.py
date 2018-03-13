@@ -31,8 +31,7 @@ class Ftp_Client_Start(object):
             show：显示当前文件夹下的所有文件及文件详细信息
             put：上传文件
             get：下载文件
-            cd：进入子文件夹
-            top:返回上一层文件夹
+            cd：切换目录
             exits：退出程序
             
         '''
@@ -67,8 +66,9 @@ class Ftp_Client_Start(object):
         # print(result)
         file_dict = dict(eval(result.decode('utf-8')))
         # print(file_dict)
+        print('返回上层目录：..')
         for element_key in file_dict:
-            print(file_dict[element_key],':',element_key)
+            print(file_dict[element_key],'：',element_key)
 
     def put(self):
         #pass
@@ -162,7 +162,12 @@ class Ftp_Client_Start(object):
     # 目录切换
     def cd(self):
         # user_home
-        print('changed folder')
+        print('changed folder line in 165')
+        self.show_files()
+        change_folder= input('请输入您需要切换的目录：')
+        f_client_conn.send('cd_files'.encode('utf-8'))
+        f_client_conn.send(change_folder.encode('utf-8'))
+        return self.show_files()
 
     def exits(self):
         f_client_conn.send(b'exits')

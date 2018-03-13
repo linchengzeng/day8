@@ -24,7 +24,8 @@ class Ftp_server_start(object):
         ftp_server_menu = {
             'get_file': self.get_file,
             'show_files':self.show_files,
-            'put_file':self.put_files
+            'put_file':self.put_files,
+            'cd_files':self.cd_files
         }
         # def __init__(self):
         #     Ftp_server_start
@@ -129,6 +130,13 @@ class Ftp_server_start(object):
                     print('已接收：', f_size)
             else:
                 print('文件接收完毕')
+    def cd_files(self):
+        print('this is cd files')
+        cd_files_str = conn.recv(204800).decode('utf-8')
+        print(cd_files_str)
+        if cd_files_str == '..':
+            print('user_old_path:',user_in_path)
+
 
 while True:
     print('已经开始监听端口，现在正在等电话打进来……')
@@ -151,7 +159,7 @@ while True:
     while True:
         print('接收到客户端请求，正在等待传输数据……')
         c_data = conn.recv(204800).decode('utf-8')
-        print('c_data:',c_data)
+        print('收到客户端请求为:',c_data)
         if c_data == 'exits':
             conn.close()
             print('客户断开连接！正在等待新的连接……')
