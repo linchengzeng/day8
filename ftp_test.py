@@ -141,7 +141,7 @@ import os,json
 # result_b = list(eval(str(result)))
 # print(result_b)
 # print(type(result_b))
-print(os.path)
+# print(os.path)
 # for line in result:
 #     if line == '.git':continue
 #     elif line == '.idea':continue
@@ -149,3 +149,15 @@ print(os.path)
 #         print(line,'is dir')
 #     elif os.path.isfile(line):
 #         print(line,'is file')
+
+g_foo = ''
+
+def set():
+    global g_foo
+    g_foo = 'abc'
+
+def use_val():
+    print(g_foo)
+
+set()
+use_val()

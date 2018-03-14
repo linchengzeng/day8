@@ -10,7 +10,13 @@ s_server.bind((Host_ip, Ip_port))  # 绑定要监听的端口
 
 # while True:
 s_server.listen(5)  # 最多挂起5个连接   此部分在异步的情况下才能试出效果
-
+base_path = os.path.dirname(__file__)  # 文件所在目录
+user_data = {
+    'userid': 'admin',
+    'userpwd': 'admin',
+}
+user_home = base_path + '/server_files/' + user_data['userid']  # 用户根目录
+user_in_path = user_home
 #######      例三     ##############
 
 class Ftp_server_start(object):
@@ -130,12 +136,24 @@ class Ftp_server_start(object):
                     print('已接收：', f_size)
             else:
                 print('文件接收完毕')
+
+
+
     def cd_files(self):
-        print('this is cd files')
+        global user_in_path
+        print('this is cd files line 144')
         cd_files_str = conn.recv(204800).decode('utf-8')
-        print(cd_files_str)
-        if cd_files_str == '..':
-            print('user_old_path:',user_in_path)
+        print('cd_files_str:%s'%cd_files_str)
+        print('cd_files_str:%s'%type(cd_files_str))
+        if cd_files_str == str('..'):
+            print('abc')
+            print('user_in_old_path:',user_in_path)
+            user_new_in_path = os.path.dirname(user_in_path)
+            print('user_in_new_path',user_new_in_path)
+            user_in_path = user_new_in_path
+        else:
+            print('def')
+
 
 
 while True:
@@ -148,14 +166,7 @@ while True:
     # if user_name == user_data['userid'] and pass_word == user_data['userpwd']:
     #     # 通过验证
     #     pass
-    base_path = os.path.dirname(__file__)  # 文件所在目录
-    user_data = {
-        'userid': 'admin',
-        'userpwd': 'admin',
-    }
 
-    user_home = base_path + '/server_files/' + user_data['userid']  # 用户根目录
-    user_in_path = user_home
     while True:
         print('接收到客户端请求，正在等待传输数据……')
         c_data = conn.recv(204800).decode('utf-8')

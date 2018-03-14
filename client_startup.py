@@ -66,7 +66,6 @@ class Ftp_Client_Start(object):
         # print(result)
         file_dict = dict(eval(result.decode('utf-8')))
         # print(file_dict)
-        print('返回上层目录：..')
         for element_key in file_dict:
             print(file_dict[element_key],'：',element_key)
 
@@ -167,7 +166,8 @@ class Ftp_Client_Start(object):
         change_folder= input('请输入您需要切换的目录：')
         f_client_conn.send('cd_files'.encode('utf-8'))
         f_client_conn.send(change_folder.encode('utf-8'))
-        return self.show_files()
+        self.show_files()
+
 
     def exits(self):
         f_client_conn.send(b'exits')
