@@ -1,7 +1,7 @@
 # -*- coding:utf-8 -*-
 #  Author:aling
 # 服务器端
-import socket,os,re,logging
+import socket,os,re
 
 s_server = socket.socket()  # 声明socket类型（地址族、协议类型等 ），同时生成socket连接对象
 Host_ip = '127.0.0.1'  #服务器端服务所绑定使用的IP
