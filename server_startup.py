@@ -142,6 +142,7 @@ class Ftp_server_start(object):
     def cd_files(self):
         global user_in_path
         print('this is cd files line 144')
+        self.show_files()
         cd_files_str = conn.recv(204800).decode('utf-8')
         print('cd_files_str:%s'%cd_files_str)
         print('cd_files_str:%s'%type(cd_files_str))
@@ -151,8 +152,12 @@ class Ftp_server_start(object):
             user_new_in_path = os.path.dirname(user_in_path)
             print('user_in_new_path',user_new_in_path)
             user_in_path = user_new_in_path
-        else:
-            print('def')
+            self.show_files()
+        elif os.path.exists(user_in_path+ '/' + cd_files_str):
+            print('新目录：',user_in_path+ '/' + cd_files_str)
+            user_in_path = user_in_path+ '/' + cd_files_str
+            self.show_files()
+        else:print('不知所云')
 
 
 

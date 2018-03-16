@@ -150,14 +150,19 @@ import os,json
 #     elif os.path.isfile(line):
 #         print(line,'is file')
 
-g_foo = ''
+# g_foo = ''
+# class abc():
+#     def set(self):
+#         global g_foo
+#         g_foo = 'abc'
+#
+#     def use_val(self):
+#         print(g_foo)
+#
+# a = abc()
+# a.set()
+# a.use_val()
 
-def set():
-    global g_foo
-    g_foo = 'abc'
-
-def use_val():
-    print(g_foo)
-
-set()
-use_val()
+import os
+str = os.path.dirname(__file__)
+print(type(str))

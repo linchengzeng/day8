@@ -162,12 +162,19 @@ class Ftp_Client_Start(object):
     def cd(self):
         # user_home
         print('changed folder line in 165')
-        self.show_files()
-        change_folder= input('请输入您需要切换的目录：')
         f_client_conn.send('cd_files'.encode('utf-8'))
+        show_old_path = f_client_conn.recv(204800).decode('utf-8')
+        file_dict = dict(eval(show_old_path))
+        # print(file_dict)
+        for element_key in file_dict:
+            print(file_dict[element_key], '：', element_key)
+        change_folder = input('请输入您需要切换的目录：')
         f_client_conn.send(change_folder.encode('utf-8'))
-        self.show_files()
-
+        show_new_path = f_client_conn.recv(204800).decode('utf-8')
+        file_dict = dict(eval(show_new_path))
+        # print(file_dict)
+        for element_key in file_dict:
+            print(file_dict[element_key], '：', element_key)
 
     def exits(self):
         f_client_conn.send(b'exits')
