@@ -9,8 +9,6 @@ h = '127.0.0.1'   #服务器端IP
 p = 8823
 f_client_conn.connect((h, p))
 
-
-
 #######      例三   文件传输  ##############
 base_path = os.path.dirname(__file__)  # 文件所在目录
 user_data = {
@@ -161,13 +159,16 @@ class Ftp_Client_Start(object):
     # 目录切换
     def cd(self):
         # user_home
-        print('changed folder line in 165')
+        print('当前文件夹：')
+        print('返回上一层目录：..')
+
         f_client_conn.send('cd_files'.encode('utf-8'))
         show_old_path = f_client_conn.recv(204800).decode('utf-8')
         file_dict = dict(eval(show_old_path))
         # print(file_dict)
         for element_key in file_dict:
             print(file_dict[element_key], '：', element_key)
+        print('输入home返回个人目录')
         change_folder = input('请输入您需要切换的目录：')
         f_client_conn.send(change_folder.encode('utf-8'))
         show_new_path = f_client_conn.recv(204800).decode('utf-8')

@@ -157,6 +157,9 @@ class Ftp_server_start(object):
             print('新目录：',user_in_path+ '/' + cd_files_str)
             user_in_path = user_in_path+ '/' + cd_files_str
             self.show_files()
+        elif cd_files_str == 'home':
+            user_in_path = user_home
+            self.show_files()
         else:print('不知所云')
 
 
