@@ -162,7 +162,22 @@ import os,json
 # a = abc()
 # a.set()
 # a.use_val()
+#
+# import os
+# str = os.path.dirname(__file__)
+# print(type(str))
 
-import os
-str = os.path.dirname(__file__)
-print(type(str))
+import xml.etree.ElementTree as ET
+tree = ET.parse("userinfo.xml")   #打开xml文件并解析它
+root = tree.getroot()    #获取根节点
+print(root.tag)
+
+#遍历xml文档
+for child in root:
+    # print(child.attrib)    #打印标签，属性
+    # print(type(child.attrib))
+    print(child.attrib.get('id'))
+    print(child.attrib.get('pwd'))
+    # for i in child:
+    #      print('tag:',i.tag)
+    #      print('text:',i.text)

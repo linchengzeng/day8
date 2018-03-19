@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<users>
+    <userinfo id="admin" pwd="admin">超级管理员</userinfo>
+    <userinfo id="user01" pwd="user01">张三</userinfo>
+    <userinfo id="user02" pwd="user02">李四</userinfo>
+    <userinfo id="user03" pwd="user03">王五</userinfo>
+    <userinfo id="user04" pwd="user04">赵六</userinfo>
+</users>
