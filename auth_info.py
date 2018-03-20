@@ -3,9 +3,9 @@
 
 import xml.etree.ElementTree as ET
 
-class Auth_user_info():
+class Auth_user_info(object):
 
-    def auth_login_info(user_id, user_pwd):
+    def auth_login_info(self,user_id, user_pwd):
        tree = ET.parse('userinfo.xml')   #打开xml文件并解析它
        root = tree.getroot()   #获取根节点  users
        for child in root:  #  遍历得到各用户总信息
