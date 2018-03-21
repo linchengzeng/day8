@@ -5,20 +5,26 @@
 # 客户端
 import socket, os,auth_info
 
-f_client_conn = socket.socket()
-h = '127.0.0.1'  # 服务器端IP
-p = 8823
-f_client_conn.connect((h, p))
-base_path = os.path.dirname(__file__)  # 文件所在目录
 
+def conn_info():
+    f_client_conn = socket.socket()
+    h = '127.0.0.1'  # 服务器端IP
+    p = 8823
+    f_client_conn.connect((h, p))
+    base_path = os.path.dirname(__file__)  # 文件所在目录
+    ftp_services = Ftp_Client_Start()
+    user_id = input()
+    user_pwd = input()
+    if auth_info.Auth_user_info(user_id, user_pwd):
+        ftp_services.start(f_client_conn)
+    else:
+        print('authencation Fail')
+        print('please clicket your userid and password!')
 
 # print('测试FTP传输文件1')
 class Ftp_Client_Start(object):
-    def __init__(self):
-        # print('this is client_startup.py' in line 51)
-        self.start()
 
-    def start(self):
+    def start(self,f_client_conn):
         ftp_menu = '''
             show：显示当前文件夹下的所有文件及文件详细信息
             put：上传文件
@@ -30,9 +36,9 @@ class Ftp_Client_Start(object):
         while True:
             print(ftp_menu)
             user_input = input('请输入需要的操作：')
-            self.user_main_page(user_input)
+            self.user_main_page(user_input,f_client_conn)
 
-    def user_main_page(self, user_input):
+    def user_main_page(self, user_input,f_client_conn):
         # print('this is user_main_page line 70')
         ftp_menu = {
             'show': self.show_files,
@@ -43,14 +49,14 @@ class Ftp_Client_Start(object):
         }
         if user_input in ftp_menu:
             # print('line 69')
-            ftp_menu[user_input]()
+            ftp_menu[user_input](f_client_conn)
             # self.get_file()
         else:
             print('您选择的不在我提供的服务范围！client_startup.py file in line 70')
             # return Ftp_Client_Start.start(self)
             return None
 
-    def show_files(self):
+    def show_files(self,f_client_conn):
         print('show def')
         f_client_conn.send(b'show_files')
         result = f_client_conn.recv(204800)
@@ -60,7 +66,7 @@ class Ftp_Client_Start(object):
         for element_key in file_dict:
             print(file_dict[element_key], '：', element_key)
 
-    def put(self):
+    def put(self,f_client_conn):
         # pass
         print('put file')
         print('this is ftp client line 72')
@@ -114,7 +120,7 @@ class Ftp_Client_Start(object):
             return None
 
     ######  从服务器上下载文件
-    def get_file(self):
+    def get_file(self,f_client_conn):
         print('get file')
         f_client_conn.send('get_file'.encode('utf-8'))  # 发送下载文件请求，用于测试服务器下载功能是否正常
         f_name = input('请输入您需要下载的文件名称：')
@@ -151,7 +157,7 @@ class Ftp_Client_Start(object):
             return None
 
     # 目录切换
-    def cd(self):
+    def cd(self,f_client_conn):
         # user_home
         print('当前文件夹：')
         print('返回上一层目录：..')
@@ -171,37 +177,12 @@ class Ftp_Client_Start(object):
         for element_key in file_dict:
             print(file_dict[element_key], '：', element_key)
 
-    def exits(self):
+    def exits(self,f_client_conn):
         f_client_conn.send(b'exits')
         print('欢迎您再次使用Aling_FTP，再见！')
+        f_client_conn.close()
         exit()
 
-def authencation(func):
-    def wapper(*args,**kwargs):
-        user_name = input('请输入用户名：')
-        user_pwd = input('请输入密码：')
-        auth_result = auth_info.Auth_user_info(user_name,user_pwd)
-        if auth_result == 'Success':
-            global user_data
-            user_data = {
-                'userid': None,
-                'userpwd': None,
-            }
-            global user_home
-            user_home = base_path + '/client_files/' + user_data['userid']  # 用户根目录
-            func
-        else:
-            print('authencation Fail')
-            print('please clicket your userid and password!')
-            return None
-    return wapper
 
 
 
-@authencation
-def Ftp_main():
-    print('this is ftp main')
-    Ftp_Client_Start()
-    f_client_conn.close()
-
-Ftp_main
